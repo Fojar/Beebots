@@ -7,16 +7,18 @@ import javafx.geometry.Point2D;
  */
 public abstract class StationaryArenaObject extends ArenaObject {
 
-	public final Point2D position;
+	public final Point2D location;
 
 	protected StationaryArenaObject(int ID, double radius, Point2D location) {
 		super(ID, radius);
-		this.position = location;
+		if (!Arena.inRange(location)) throw new IllegalArgumentException("location is out of range.");
+
+		this.location = location;
 	}
 
 	@Override
 	public Point2D getPosition() {
-		return position;
+		return location;
 	}
 
 }

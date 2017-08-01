@@ -4,12 +4,15 @@ import javafx.geometry.Point2D;
 
 public class Flower extends StationaryArenaObject {
 
-	static final double FLOWER_RADIUS = 5;
+	static final double FLOWER_RADIUS = 15;
+	
+	private static int nextId = 0;
 	
 	private double pollen;
 
-	public Flower(double pollen, int ID, Point2D position, double radius) {
-		super(verifyIDforPlayers(ID), FLOWER_RADIUS, position);
+	public Flower(Point2D position) {
+		super(nextId++, FLOWER_RADIUS, position);
+		pollen = 100;
 	}
 
 	public double getPollen() {

@@ -21,7 +21,7 @@ public class MainScreen extends Screen {
 	WorldState worldState;
 
 	Color hiveColor = new Color(.7f, .6f, .3f);
-	Color grassColor = new Color(.1f, .6f, .1f);
+	Color grassColor = new Color(.1f, .5f, .1f);
 
 	@Override
 	public void initialize() {
@@ -39,31 +39,42 @@ public class MainScreen extends Screen {
 
 	@Override
 	public void draw(Graphics2D g) {
-		
-		g.translate(HALF_HEIGHT, HALF_HEIGHT);
-		double scale = (double)HEIGHT / Arena.SIZE;
+
+		g.translate(HALF_WIDTH, HALF_HEIGHT);
+		double scale = (double) HEIGHT / Arena.SIZE;
 		g.scale(scale, scale);
-		
+
 		g.setColor(grassColor);
 		g.fillRect(-Arena.MAX_COORD, -Arena.MAX_COORD, Arena.SIZE, Arena.SIZE);
-		
-		
+
 		g.setColor(hiveColor);
 		for (Hive hive : worldState.hives) {
-
-			Point2D position = hive.getPosition();
-
-			AffineTransform transform = g.getTransform();
-
-			g.translate(position.getX(), position.getY());
-			scale = hive.radius;
-			g.scale(scale, scale);
-			g.fillOval(-1, -1, 2, 2);
-
-			g.setTransform(transform);
-
+			drawCircle(g, hive.getPosition(), hive.radius);
 		}
+		
+		g.setColor(Color.YELLOW);
+		for (Bee bee : worldState.bees) {
+			drawCircle(g, bee.getPosition(), bee.radius);
+		}
+		
+		g.setColor(Color.PINK);
+		for (Flower flower : worldState.flowers) {
+			drawCircle(g, flower.getPosition(), flower.radius);
+		}
+		
 
+	}
+
+	private void drawCircle(Graphics2D g, Point2D centre, double radius) {
+
+		AffineTransform transform = g.getTransform();
+
+		g.translate(centre.getX(), centre.getY());
+		double scale = radius;
+		g.scale(scale, scale);
+		g.fillOval(-1, -1, 2, 2);
+
+		g.setTransform(transform);
 	}
 
 }

@@ -4,17 +4,15 @@ import javafx.geometry.Point2D;
 
 public class Bee extends ArenaObject {
 
+	static final double BEE_RADIUS = 5;
+	
 	Point2D position;
 
 	double pollen;
 
-	public Bee(int ID, Point2D position) {
-
-		super(verifyIDforPlayers(ID), 5);
-		
-		
-		if (!Arena.inRange(position)) throw new IllegalArgumentException("position is out of range.");
-		this.position = position;
+	public Bee(int ID, Hive hive) {
+		super(verifyIDforPlayers(ID), BEE_RADIUS);
+		this.position = hive.getPosition();
 	}
 
 	@Override
