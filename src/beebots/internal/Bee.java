@@ -4,8 +4,10 @@ import javafx.geometry.Point2D;
 
 public class Bee extends ArenaObject {
 
-	static final double BEE_RADIUS = 5;
+	static final double BEE_RADIUS = 7;
 	
+	static final double POLLEN_CAPACITY = 5;
+
 	Point2D position;
 
 	double pollen;

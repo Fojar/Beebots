@@ -6,14 +6,14 @@ import javafx.geometry.Point2D;
 
 public class World {
 
-	final List<Flower> flowers;
-	final List<Bee> bees = new ArrayList<>();
-	final List<Hive> hives = new ArrayList<>();
+	public final List<Flower> flowers;
+	public final List<Bee> bees = new ArrayList<>();
+	public final List<Hive> hives = new ArrayList<>();
 
 	public World() {
 
-		final double HIVE_OFFSET = 450;
-		final double FLOWER_EXTENT = 450;
+		final double HIVE_OFFSET = 460;
+		final double MINIMUM_FLOWER_SEPARATION = 150;
 
 		List<Point2D> startingPositions = new ArrayList<>();
 
@@ -42,9 +42,9 @@ public class World {
 		flowerPositions.add(Point2D.ZERO);
 
 		for (int i = 0; i < 100; i++) {
-			Point2D candidate = new Point2D(RNG.nextDouble() * FLOWER_EXTENT, RNG.nextDouble() * FLOWER_EXTENT);
+			Point2D candidate = new Point2D(RNG.nextDouble() * HIVE_OFFSET, RNG.nextDouble() * HIVE_OFFSET);
 
-			if (!flowerPositions.stream().anyMatch(p -> p.distance(candidate) < 150)) {
+			if (!flowerPositions.stream().anyMatch(p -> p.distance(candidate) < MINIMUM_FLOWER_SEPARATION)) {
 				flowerPositions.add(candidate);
 				flowerPositions.add(new Point2D(-candidate.getY(), candidate.getX()));
 				flowerPositions.add(new Point2D(candidate.getY(), -candidate.getX()));
@@ -52,7 +52,10 @@ public class World {
 			}
 		}
 
-		flowers = flowerPositions.stream().skip(hives.size()).map(pos -> new Flower(pos)).collect(Collectors.toList());
+		flowers = flowerPositions.stream()
+				.skip(hives.size())				// The first positions were for the hives.
+				.map(pos -> new Flower(pos))
+				.collect(Collectors.toList());
 
 		for (int i = 0; i < flowers.size(); i++) {
 			assert (flowers.get(i).ID == i);

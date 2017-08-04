@@ -1,8 +1,8 @@
 package beebots.visualizer;
 
+import beebots.bots.TestBot;
 import beebots.internal.*;
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Random;
@@ -23,22 +23,37 @@ public class MainScreen extends Screen {
 	Color hiveColor = new Color(.7f, .6f, .3f);
 	Color grassColor = new Color(.1f, .5f, .1f);
 
+	BeeController botA;
+
 	@Override
 	public void initialize() {
 
 		world = new World();
 		worldState = new WorldState(world);
+
+		botA = new BeeController(world.bees.get(0), new TestBot());
 	}
+
+	int ticks;
 
 	@Override
 	public void update() {
 		char key = host.getKey();
 		if (key == KeyEvent.VK_ESCAPE) host.popScreen();
 
+		if (++ticks == 20) {
+			botA.doTurn(worldState);
+			ticks = 0;
+		}
+
 	}
+
+	Font actionFont = FontSystem.getFont(20);
 
 	@Override
 	public void draw(Graphics2D g) {
+
+		AffineTransform transform = g.getTransform();
 
 		g.translate(HALF_WIDTH, HALF_HEIGHT);
 		double scale = (double) HEIGHT / Arena.SIZE;
@@ -47,25 +62,40 @@ public class MainScreen extends Screen {
 		g.setColor(grassColor);
 		g.fillRect(-Arena.MAX_COORD, -Arena.MAX_COORD, Arena.SIZE, Arena.SIZE);
 
-		g.setColor(hiveColor);
 		for (Hive hive : worldState.hives) {
-			drawCircle(g, hive.getPosition(), hive.radius);
+			g.setColor(hiveColor);
+			fillCircle(g, hive.getPosition(), hive.radius);
+			g.setColor(Color.BLACK);
+			drawCircle(g, hive.getPosition(), hive.radius, .1f);
 		}
-		
-		g.setColor(Color.YELLOW);
-		for (Bee bee : worldState.bees) {
-			drawCircle(g, bee.getPosition(), bee.radius);
-		}
-		
+
 		g.setColor(Color.PINK);
 		for (Flower flower : worldState.flowers) {
-			drawCircle(g, flower.getPosition(), flower.radius);
+			fillCircle(g, flower.getPosition(), flower.radius);
 		}
-		
+
+		g.setColor(Color.YELLOW);
+		for (Bee bee : worldState.bees) {
+			fillCircle(g, bee.getPosition(), bee.radius);
+		}
+		g.setColor(Color.BLACK);
+		for (Bee bee : worldState.bees) {
+			drawCircle(g, bee.getPosition(), bee.radius, .3f);
+		}
+
+		g.setTransform(transform);
+
+		g.setColor(Color.GRAY);
+		g.fillRect(5, 5, 200, 100);
+
+		g.setColor(Color.BLACK);
+		g.setFont(actionFont);
+
+		g.drawString(botA.beeBot.getCurrentAction().getDescription(), 20, 40);
 
 	}
 
-	private void drawCircle(Graphics2D g, Point2D centre, double radius) {
+	private void fillCircle(Graphics2D g, Point2D centre, double radius) {
 
 		AffineTransform transform = g.getTransform();
 
@@ -73,6 +103,20 @@ public class MainScreen extends Screen {
 		double scale = radius;
 		g.scale(scale, scale);
 		g.fillOval(-1, -1, 2, 2);
+
+		g.setTransform(transform);
+	}
+
+	private void drawCircle(Graphics2D g, Point2D centre, double radius, float strokeWidth) {
+
+		AffineTransform transform = g.getTransform();
+
+		g.translate(centre.getX(), centre.getY());
+		double scale = radius;
+		g.scale(scale, scale);
+
+		g.setStroke(new BasicStroke(strokeWidth));
+		g.drawOval(-1, -1, 2, 2);
 
 		g.setTransform(transform);
 	}

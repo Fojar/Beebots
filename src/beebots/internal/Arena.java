@@ -11,7 +11,7 @@ public class Arena {
 
 		double x = point.getX();
 		double y = point.getY();
-
+		
 		return (x >= -MAX_COORD && x <= MAX_COORD && y >= -MAX_COORD && y <= MAX_COORD);
 	}
 
