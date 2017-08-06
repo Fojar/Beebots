@@ -1,5 +1,6 @@
 package beebots.internal;
 
+import java.awt.Point;
 import java.util.*;
 import java.util.stream.Collectors;
 import javafx.geometry.Point2D;
@@ -12,14 +13,15 @@ public class World {
 
 	public World() {
 
-		final double HIVE_OFFSET = 460;
+		
+		final double FLOWER_EXTENT = 460;
 		final double MINIMUM_FLOWER_SEPARATION = 150;
 
-		List<Point2D> startingPositions = new ArrayList<>();
+		List<Point> startingPositions = new ArrayList<>();
 
 		for (int y = -1; y <= 1; y += 2) {
 			for (int x = -1; x <= 1; x += 2) {
-				startingPositions.add(new Point2D(x * HIVE_OFFSET, y * HIVE_OFFSET));
+				startingPositions.add(new Point(x, y));
 			}
 		}
 
@@ -42,7 +44,7 @@ public class World {
 		flowerPositions.add(Point2D.ZERO);
 
 		for (int i = 0; i < 100; i++) {
-			Point2D candidate = new Point2D(RNG.nextDouble() * HIVE_OFFSET, RNG.nextDouble() * HIVE_OFFSET);
+			Point2D candidate = new Point2D(RNG.nextDouble() * FLOWER_EXTENT, RNG.nextDouble() * FLOWER_EXTENT);
 
 			if (!flowerPositions.stream().anyMatch(p -> p.distance(candidate) < MINIMUM_FLOWER_SEPARATION)) {
 				flowerPositions.add(candidate);
@@ -60,6 +62,8 @@ public class World {
 		for (int i = 0; i < flowers.size(); i++) {
 			assert (flowers.get(i).ID == i);
 		}
+		
+		System.out.println(flowers.size() + " flowers created.");
 	}
 
 }

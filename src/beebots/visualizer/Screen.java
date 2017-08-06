@@ -9,11 +9,11 @@ public abstract class Screen {
 
 	static protected ScreenManagerInterface host = null;
 
-	static protected final int WIDTH = 1280;
-	static protected final int HEIGHT = 800;
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 800;
 
-	static protected final int HALF_WIDTH = WIDTH / 2;
-	static protected final int HALF_HEIGHT = HEIGHT / 2;
+	public static final int HALF_WIDTH = WIDTH / 2;
+	public static final int HALF_HEIGHT = HEIGHT / 2;
 
 	/**
 	 * Initialization should happen here, rather than in constructor. In particular, other screens should be pushed from

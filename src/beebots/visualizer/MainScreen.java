@@ -2,10 +2,13 @@ package beebots.visualizer;
 
 import beebots.bots.TestBot;
 import beebots.internal.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 import javafx.geometry.Point2D;
 
 public class MainScreen extends Screen {
@@ -23,7 +26,7 @@ public class MainScreen extends Screen {
 	Color hiveColor = new Color(.7f, .6f, .3f);
 	Color grassColor = new Color(.1f, .5f, .1f);
 
-	BeeController botA;
+	List<BeeController> controllers = new ArrayList<>();
 
 	@Override
 	public void initialize() {
@@ -31,7 +34,9 @@ public class MainScreen extends Screen {
 		world = new World();
 		worldState = new WorldState(world);
 
-		botA = new BeeController(world.bees.get(0), new TestBot());
+		controllers = world.bees.stream()
+				.map(b -> new BeeController(b, new TestBot()))
+				.collect(Collectors.toList());
 	}
 
 	int ticks;
@@ -41,17 +46,17 @@ public class MainScreen extends Screen {
 		char key = host.getKey();
 		if (key == KeyEvent.VK_ESCAPE) host.popScreen();
 
-		if (++ticks == 20) {
-			botA.doTurn(worldState);
+		if (++ticks == 15) {
+			controllers.forEach(c -> c.doTurn(worldState));
 			ticks = 0;
 		}
 
 	}
 
-	Font actionFont = FontSystem.getFont(20);
-
 	@Override
 	public void draw(Graphics2D g) {
+
+		controllers.forEach(c -> c.drawStatus(g));
 
 		AffineTransform transform = g.getTransform();
 
@@ -84,14 +89,6 @@ public class MainScreen extends Screen {
 		}
 
 		g.setTransform(transform);
-
-		g.setColor(Color.GRAY);
-		g.fillRect(5, 5, 200, 100);
-
-		g.setColor(Color.BLACK);
-		g.setFont(actionFont);
-
-		g.drawString(botA.beeBot.getCurrentAction().getDescription(), 20, 40);
 
 	}
 
