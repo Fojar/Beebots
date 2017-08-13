@@ -10,7 +10,7 @@ public class MoveAction extends Action {
 		this.target = target;
 	}
 
-	final double DISTANCE_PER_MOVE = 50;
+	final double DISTANCE_PER_MOVE = 25;
 
 	@Override
 	boolean executeFor(Bee bee, World world) {

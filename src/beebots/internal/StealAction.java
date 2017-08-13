@@ -2,18 +2,29 @@ package beebots.internal;
 
 public class StealAction extends Action {
 
-	final ArenaObject target;
+	public static final double MAXIMUM_STEALING_DISTANCE = 50;
 
-	StealAction(ArenaObject target) {
+	final Bee target;
+
+	StealAction(Bee target) {
 		this.target = target;
 	}
 
-	final double DISTANCE_PER_MOVE = 100;
+	@Override
+	boolean prepareFor(Bee bee, World world) {
+		return bee.position.distance(target.position) <= MAXIMUM_STEALING_DISTANCE;
+	}
 
 	@Override
 	boolean executeFor(Bee bee, World world) {
 
-		return completed;
+		double average = (bee.pollen + target.pollen) / 2;
+		bee.pollen = average;
+		target.pollen = average;
+
+		System.out.println("theft completed.");
+
+		return (completed = true);
 	}
 
 	@Override

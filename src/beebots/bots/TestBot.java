@@ -10,8 +10,9 @@ public class TestBot extends BeeBot {
 	Random RNG = new Random();
 
 	@Override
-	public void initalize(Bee bee) {
+	public String initalize(Bee bee) {
 		this.bee = bee;
+		return "Collector " + bee.ID;
 	}
 
 	enum State {

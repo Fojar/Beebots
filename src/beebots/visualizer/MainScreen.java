@@ -1,11 +1,11 @@
 package beebots.visualizer;
 
 import beebots.bots.TestBot;
+import beebots.bots.ThiefBot;
 import beebots.internal.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,9 +33,11 @@ public class MainScreen extends Screen {
 
 		world = new World();
 
-		runners = world.bees.stream()
-				.map(b -> new BotRunner(b, new TestBot(), world))
-				.collect(Collectors.toList());
+		runners.add(new BotRunner(world.bees.get(0), new TestBot(), world));
+		runners.add(new BotRunner(world.bees.get(1), new TestBot(), world));
+		runners.add(new BotRunner(world.bees.get(2), new TestBot(), world));
+
+		runners.add(new BotRunner(world.bees.get(3), new ThiefBot(), world));
 	}
 
 	int ticks;

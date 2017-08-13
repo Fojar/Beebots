@@ -9,8 +9,9 @@ public abstract class BeeBot {
 	 * This will be called once at the start of the round.
 	 *
 	 * @param bee The bee that this program will operate.
+	 * @return The name for this bot.
 	 */
-	public abstract void initalize(Bee bee);
+	public abstract String initalize(Bee bee);
 
 	public abstract void computeNextAction(World world);
 
@@ -32,6 +33,10 @@ public abstract class BeeBot {
 
 	protected void depositPollen() {
 		currentAction = new DepositPollenAction();
+	}
+
+	protected void stealFrom(Bee bee) {
+		currentAction = new StealAction(bee);
 	}
 
 }
