@@ -115,6 +115,7 @@ public final class MainFrame implements KeyListener, ScreenManagerInterface {
 				Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 				g.setClip(0, 0, Screen.WIDTH, Screen.HEIGHT);
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
 				screens.peek().draw(g);
 

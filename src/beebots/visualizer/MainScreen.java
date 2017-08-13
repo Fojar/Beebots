@@ -2,12 +2,12 @@ package beebots.visualizer;
 
 import beebots.bots.TestBot;
 import beebots.internal.*;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
 import javafx.geometry.Point2D;
@@ -75,6 +75,9 @@ public class MainScreen extends Screen {
 
 		for (Flower flower : world.flowers) {
 
+			g.setColor(Color.BLACK);
+			drawCircle(g, flower.getPosition(), Flower.RADIUS, .1f);
+
 			g.setColor(Color.GRAY);
 			fillCircle(g, flower.getPosition(), Flower.RADIUS);
 
@@ -83,8 +86,6 @@ public class MainScreen extends Screen {
 			double pollenRadius = Flower.RADIUS * Math.sqrt(flower.getPollenFraction());
 			fillCircle(g, flower.getPosition(), pollenRadius);
 
-			g.setColor(Color.BLACK);
-			drawCircle(g, flower.getPosition(), Flower.RADIUS, .05f);
 		}
 
 		g.setColor(Color.YELLOW);
@@ -105,8 +106,7 @@ public class MainScreen extends Screen {
 		AffineTransform transform = g.getTransform();
 
 		g.translate(centre.getX(), centre.getY());
-		double scale = radius;
-		g.scale(scale, scale);
+		g.scale(radius, radius);
 		g.fillOval(-1, -1, 2, 2);
 
 		g.setTransform(transform);
@@ -117,8 +117,7 @@ public class MainScreen extends Screen {
 		AffineTransform transform = g.getTransform();
 
 		g.translate(centre.getX(), centre.getY());
-		double scale = radius;
-		g.scale(scale, scale);
+		g.scale(radius, radius);
 
 		g.setStroke(new BasicStroke(strokeWidth));
 		g.drawOval(-1, -1, 2, 2);
