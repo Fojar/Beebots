@@ -12,11 +12,8 @@ public abstract class ArenaObject {
 	 */
 	public final int ID;
 
-	public final double radius;
-
-	protected ArenaObject(int ID, double radius) {
+	protected ArenaObject(int ID) {
 		this.ID = ID;
-		this.radius = radius;
 	}
 
 	/**
@@ -28,5 +25,7 @@ public abstract class ArenaObject {
 	}
 
 	public abstract Point2D getPosition();
+	
+	public abstract double getRadius();
 
 }

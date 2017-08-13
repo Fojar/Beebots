@@ -2,12 +2,30 @@ package beebots.internal;
 
 public abstract class Action {
 
-	abstract boolean executeFor(Bee bee);
+	public static final Action IDLE = IdleAction.getInstance();
+
+	protected boolean completed;
+
+	/**
+	 * @return true if the preparation succeeds and the action can be executed.
+	 */
+	boolean prepareFor(Bee bee, World world) {
+		return true;
+	}
+
+	/**
+	 * @return true if the action is finished.
+	 */
+	abstract boolean executeFor(Bee bee, World world);
 
 	public abstract String getDescription();
 
-	public static final Action IDLE = IdleAction.getInstance();
+	public boolean isCompleted() {
+		return completed;
+	}
 
-	abstract boolean isCompleted();
+	void finish() {
+		completed = true;
+	}
 
 }

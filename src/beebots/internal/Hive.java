@@ -5,8 +5,9 @@ import javafx.geometry.Point2D;
 
 public class Hive extends StationaryArenaObject {
 
+	public static final double RADIUS = 35;
 	static final double OFFSET_MULTIPLIER = 460;
-	static final double RADIUS = 30;
+	
 
 	double pollen;
 
@@ -19,7 +20,7 @@ public class Hive extends StationaryArenaObject {
 	public final Point offset;
 
 	Hive(int ID, Point offset) {
-		super(verifyIDforPlayers(ID), RADIUS, getPositionFromOffset(offset));
+		super(verifyIDforPlayers(ID), getPositionFromOffset(offset));
 		this.offset = offset;
 		bee = new Bee(ID, this);
 	}
@@ -30,6 +31,11 @@ public class Hive extends StationaryArenaObject {
 
 	private static Point2D getPositionFromOffset(Point offset) {
 		return new Point2D(offset.x * OFFSET_MULTIPLIER, offset.y * OFFSET_MULTIPLIER);
+	}
+
+	@Override
+	public double getRadius() {
+		return RADIUS;
 	}
 
 }

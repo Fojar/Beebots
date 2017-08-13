@@ -6,16 +6,14 @@ public class MoveAction extends Action {
 
 	final ArenaObject target;
 
-	private boolean completed;
-
 	MoveAction(ArenaObject target) {
 		this.target = target;
 	}
 
-	final double DISTANCE_PER_MOVE = 100;
+	final double DISTANCE_PER_MOVE = 50;
 
 	@Override
-	boolean executeFor(Bee bee) {
+	boolean executeFor(Bee bee, World world) {
 
 		// Move the bee toward its target.
 		Point2D vector = target.getPosition().subtract(bee.position);
@@ -27,16 +25,12 @@ public class MoveAction extends Action {
 			bee.position = bee.position.add(vector);
 
 			// If the remaining distance is less than the target's radius, consider the move done. 
-			completed = (distance - vector.magnitude()) < target.radius;
+			completed = (distance - vector.magnitude()) < target.getRadius();
 		} else {
 			bee.position = target.getPosition();
 			completed = true;
 		}
 
-		return completed;
-	}
-
-	public boolean isCompleted() {
 		return completed;
 	}
 

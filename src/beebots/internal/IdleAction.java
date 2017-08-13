@@ -12,7 +12,7 @@ public class IdleAction extends Action {
 	}
 
 	@Override
-	boolean executeFor(Bee bee) {
+	boolean executeFor(Bee bee, World world) {
 		return true;
 	}
 
@@ -22,7 +22,7 @@ public class IdleAction extends Action {
 	}
 
 	@Override
-	boolean isCompleted() {
+	public boolean isCompleted() {
 		return false;
 	}
 
