@@ -1,4 +1,4 @@
-package beebots.internal;
+package beebots.internal.arena;
 
 import java.awt.Point;
 import javafx.geometry.Point2D;
@@ -7,9 +7,6 @@ public class Hive extends StationaryArenaObject {
 
 	public static final double RADIUS = 35;
 	static final double OFFSET_MULTIPLIER = 460;
-	
-
-	double pollen;
 
 	/* Each hive is associated with one bee having the same ID. */
 	public final Bee bee;

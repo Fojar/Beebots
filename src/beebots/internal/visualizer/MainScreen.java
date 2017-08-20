@@ -1,15 +1,17 @@
-package beebots.visualizer;
+package beebots.internal.visualizer;
 
-import beebots.bots.TestBot;
-import beebots.bots.ThiefBot;
+import beebots.bots.*;
+import beebots.external.*;
 import beebots.internal.*;
+import beebots.internal.actions.*;
+import beebots.internal.arena.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
-import java.util.*;
+import java.awt.event.*;
+import java.awt.geom.*;
 import java.util.List;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.*;
+import java.util.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.groupingBy;
 import javafx.geometry.Point2D;
 
 public class MainScreen extends Screen {
@@ -17,27 +19,26 @@ public class MainScreen extends Screen {
 	double x = HALF_WIDTH, y = HALF_HEIGHT;
 	Random RNG = new Random();
 
-	double angle = RNG.nextFloat() * Math.PI;
-	double angleVel = RNG.nextGaussian() * .1;
-	double angleAcc;
-
-	World world;
+	Arena arena;
+	ArenaState arenaState;
 
 	Color hiveColor = new Color(.7f, .6f, .3f);
 	Color grassColor = new Color(.1f, .5f, .1f);
 
 	List<BotRunner> runners = new ArrayList<>();
+	
 
 	@Override
 	public void initialize() {
 
-		world = new World();
+		arena = new Arena();
+		arenaState = new ArenaState(arena);
 
-		runners.add(new BotRunner(world.bees.get(0), new TestBot(), world));
-		runners.add(new BotRunner(world.bees.get(1), new TestBot(), world));
-		runners.add(new BotRunner(world.bees.get(2), new TestBot(), world));
+		runners.add(new BotRunner(arena.bees.get(0), new TestBot(), arena, arenaState));
+		runners.add(new BotRunner(arena.bees.get(1), new TestBot(), arena, arenaState));
+		runners.add(new BotRunner(arena.bees.get(2), new TestBot(), arena, arenaState));
 
-		runners.add(new BotRunner(world.bees.get(3), new ThiefBot(), world));
+		runners.add(new BotRunner(arena.bees.get(3), new ThiefBot(), arena, arenaState));
 	}
 
 	int ticks;
@@ -51,7 +52,6 @@ public class MainScreen extends Screen {
 			doActions();
 			ticks = 0;
 		}
-
 	}
 
 	@Override
@@ -68,14 +68,14 @@ public class MainScreen extends Screen {
 		g.setColor(grassColor);
 		g.fillRect(-Arena.MAX_COORD, -Arena.MAX_COORD, Arena.SIZE, Arena.SIZE);
 
-		for (Hive hive : world.hives) {
+		for (Hive hive : arena.hives) {
 			g.setColor(hiveColor);
 			fillCircle(g, hive.getPosition(), Hive.RADIUS);
 			g.setColor(Color.BLACK);
 			drawCircle(g, hive.getPosition(), Hive.RADIUS, .1f);
 		}
 
-		for (Flower flower : world.flowers) {
+		for (Flower flower : arena.flowers) {
 
 			g.setColor(Color.BLACK);
 			drawCircle(g, flower.getPosition(), Flower.RADIUS, .1f);
@@ -91,12 +91,27 @@ public class MainScreen extends Screen {
 		}
 
 		g.setColor(Color.YELLOW);
-		for (Bee bee : world.bees) {
+		for (Bee bee : arena.bees) {
 			fillCircle(g, bee.getPosition(), Bee.RADIUS);
 		}
 		g.setColor(Color.BLACK);
-		for (Bee bee : world.bees) {
+		for (Bee bee : arena.bees) {
 			drawCircle(g, bee.getPosition(), Bee.RADIUS, .25f);
+		}
+
+		g.setColor(Color.RED);
+		for (BotRunner runner : runners) {
+			if (runner.beeBot.currentAction instanceof StealAction) {
+
+				StealAction a = (StealAction) runner.beeBot.currentAction;
+
+				Point2D thief = runner.bee.getPosition();
+				Point2D mark = a.target.getPosition();
+
+				Shape line = new Line2D.Double(thief.getX(), thief.getY(), mark.getX(), mark.getY());
+				g.setStroke(new BasicStroke(30));
+				g.draw(line);
+			}
 		}
 
 		g.setTransform(transform);
@@ -146,11 +161,12 @@ public class MainScreen extends Screen {
 					r.executeCurrentAction();
 				});
 
-		runners.stream()
+		List<BotRunner> movers = runners.stream()
 				.filter(r -> r.getCurrentAction() instanceof MoveAction)
-				.forEach(r -> {
-					r.executeCurrentAction();
-				});
+				.collect(Collectors.toList());
+
+		movers.forEach(m -> m.prepareCurrentAction());
+		movers.forEach(m -> m.executeCurrentAction());
 
 	}
 

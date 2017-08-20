@@ -1,4 +1,4 @@
-package beebots.visualizer;
+package beebots.internal.visualizer;
 
 import java.util.HashMap;
 import java.util.Map;

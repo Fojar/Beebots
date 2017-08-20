@@ -1,16 +1,18 @@
-package beebots.internal;
+package beebots.internal.actions;
+
+import beebots.internal.arena.*;
 
 public class CollectPollenAction extends Action {
 
 	Flower targetFlower;
 
 	@Override
-	boolean prepareFor(Bee bee, World world) {
+	public boolean prepareFor(Bee bee, Arena arena) {
 
 		if (targetFlower == null) {
 
 			// If the bee is on a flower, it can collect some pollen.
-			Flower flower = world.getFlowerNearestToPoint(bee.position);
+			Flower flower = arena.getFlowerNearestToPoint(bee.position);
 			double distance = flower.location.distance(bee.position);
 
 			if (distance < Flower.RADIUS) {
@@ -31,7 +33,7 @@ public class CollectPollenAction extends Action {
 	}
 
 	@Override
-	boolean executeFor(Bee bee, World world) {
+	public boolean executeFor(Bee bee, Arena arena) {
 		return false;
 	}
 

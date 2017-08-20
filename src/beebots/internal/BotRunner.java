@@ -1,32 +1,41 @@
 package beebots.internal;
 
-import beebots.visualizer.FontSystem;
-import beebots.visualizer.Screen;
+import beebots.internal.visualizer.FontSystem;
+import beebots.internal.visualizer.Screen;
+import beebots.external.*;
+import beebots.internal.actions.*;
+import beebots.internal.arena.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
+import java.awt.geom.*;
 
 public class BotRunner {
 
 	public final Bee bee;
 	public final BeeBot beeBot;
-	public final World world;
+
+	final Arena arena;
+	final ArenaState arenaState;
 
 	public final String name;
 
 	final Font actionFont = FontSystem.getFont(20);
-
 	final Color backgroundColor = new Color(240, 240, 240);
 
-	public BotRunner(Bee bee, BeeBot beeBot, World world) {
+	public BotRunner(Bee bee, BeeBot beeBot, Arena arena, ArenaState arenaState) {
 		this.bee = bee;
 		this.beeBot = beeBot;
-		this.world = world;
+		this.arena = arena;
+		this.arenaState = arenaState;
 
-		name = beeBot.initalize(bee);
+		name = beeBot.initalize(arenaState.bees.get(bee.ID));
 	}
 
 	public void computeNextAction() {
-		beeBot.computeNextAction(world);
+		if (beeBot.currentAction.isCompleted()) {
+			beeBot.previousAction = beeBot.currentAction;
+			beeBot.currentAction = Action.IDLE;
+		}
+		beeBot.computeNextAction(arenaState);
 	}
 
 	public Action getCurrentAction() {
@@ -51,33 +60,27 @@ public class BotRunner {
 		g.setFont(actionFont);
 
 		g.drawString(name, 20, 40);
-		g.drawString(beeBot.getCurrentAction().getDescription(), 20, 70);
+		g.drawString(beeBot.currentAction.getDescription(), 20, 70);
 
-		g.drawString(String.format("Carrying %.1f", bee.pollen), 20, 100);
-		g.drawString(String.format("Stored %.1f", bee.hive.pollen), 20, 130);
+		g.drawString(String.format("Carrying %.1f", bee.getPollen()), 20, 100);
+		g.drawString(String.format("Stored %.1f", bee.hive.getPollen()), 20, 130);
 
 		g.setTransform(transform);
 
 	}
 
 	public void executeCurrentAction() {
-		if (beeBot.currentAction.executeFor(bee, world)) {
-			beeBot.previousAction = beeBot.currentAction;
-			beeBot.currentAction = Action.IDLE;
-		};
-
+		beeBot.currentAction.executeFor(bee, arena);
 	}
 
 	public boolean prepareCurrentAction() {
-		boolean ready = beeBot.currentAction.prepareFor(bee, world);
+		boolean ready = beeBot.currentAction.prepareFor(bee, arena);
 		if (!ready) finishCurrentAction();
 		return ready;
 	}
 
-	void finishCurrentAction() {
+	public void finishCurrentAction() {
 		beeBot.currentAction.finish();
-		beeBot.previousAction = beeBot.currentAction;
-		beeBot.currentAction = Action.IDLE;
 	}
 
 }

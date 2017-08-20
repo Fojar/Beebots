@@ -1,16 +1,17 @@
 package beebots.bots;
 
-import beebots.internal.*;
-import java.util.Random;
+import beebots.external.*;
+import beebots.internal.actions.*;
+import java.util.*;
 
 public class ThiefBot extends BeeBot {
 
-	Bee myBee;
+	BeeState myBee;
 
 	Random RNG = new Random();
 
 	@Override
-	public String initalize(Bee bee) {
+	public String initalize(BeeState bee) {
 		this.myBee = bee;
 		return "Thief " + bee.ID;
 	}
@@ -25,15 +26,15 @@ public class ThiefBot extends BeeBot {
 	State state = State.DEPOSITING_POLLEN;
 
 	@Override
-	public void computeNextAction(World world) {
+	public void computeNextAction(ArenaState arena) {
 
-		if (getCurrentAction() == Action.IDLE) {
+		if (currentAction == Action.IDLE) {
 			// Whenever the last action has finished, we select our next action.
 
 			switch (state) {
 
 			case STEALING:
-				flyTo(myBee.hive);
+				flyTo(myBee.hiveState);
 				state = State.RETURNING_TO_HIVE;
 				break;
 
@@ -44,7 +45,7 @@ public class ThiefBot extends BeeBot {
 
 			case DEPOSITING_POLLEN:
 			case HUNTING:
-				flyTo(world.bees.get(RNG.nextInt(world.bees.size())));
+				flyTo(arena.bees.get(RNG.nextInt(arena.bees.size())));
 				state = State.HUNTING;
 				break;
 			}
@@ -52,16 +53,16 @@ public class ThiefBot extends BeeBot {
 		}
 
 		if (state == State.HUNTING) {
-			for (Bee bee : world.bees) {
+			for (BeeState bee : arena.bees) {
 				if (bee == myBee) continue;
 
 				if (bee.getPosition().distance(myBee.getPosition()) <= StealAction.MAXIMUM_STEALING_DISTANCE) {
-					if (bee.getPollenCarried() > 0) {
+					if (bee.getPollen() > 0) {
 						stealFrom(bee);
 						state = State.STEALING;
 						break;
 					} else {
-						flyTo(world.bees.get(RNG.nextInt(world.bees.size())));
+						flyTo(arena.bees.get(RNG.nextInt(arena.bees.size())));
 					}
 				}
 			}

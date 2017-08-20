@@ -1,5 +1,6 @@
-package beebots.internal;
+package beebots.internal.arena;
 
+import beebots.internal.BotRunner;
 import java.util.List;
 import javafx.geometry.Point2D;
 
@@ -10,15 +11,9 @@ public class Flower extends StationaryArenaObject {
 
 	private static int nextId = 0;
 
-	private double pollen;
-
 	public Flower(Point2D position) {
 		super(nextId++, position);
 		pollen = INITIAL_POLLEN;
-	}
-
-	public double getPollen() {
-		return pollen;
 	}
 
 	public double getPollenFraction() {

@@ -1,4 +1,6 @@
-package beebots.internal;
+package beebots.internal.actions;
+
+import beebots.internal.arena.*;
 
 public class IdleAction extends Action {
 
@@ -12,7 +14,7 @@ public class IdleAction extends Action {
 	}
 
 	@Override
-	boolean executeFor(Bee bee, World world) {
+	public boolean executeFor(Bee bee, Arena arena) {
 		return true;
 	}
 

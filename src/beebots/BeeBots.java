@@ -1,6 +1,6 @@
-package beebots;
+package beebots.external;
 
-import beebots.visualizer.MainFrame;
+import beebots.internal.visualizer.MainFrame;
 
 public class BeeBots {
 

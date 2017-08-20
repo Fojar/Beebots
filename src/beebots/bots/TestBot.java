@@ -1,16 +1,17 @@
 package beebots.bots;
 
-import beebots.internal.*;
+import beebots.external.*;
+import beebots.internal.actions.Action;
 import java.util.Random;
 
 public class TestBot extends BeeBot {
 
-	Bee bee;
+	BeeState bee;
 
 	Random RNG = new Random();
 
 	@Override
-	public String initalize(Bee bee) {
+	public String initalize(BeeState bee) {
 		this.bee = bee;
 		return "Collector " + bee.ID;
 	}
@@ -25,9 +26,9 @@ public class TestBot extends BeeBot {
 	State state = State.DEPOSITING_POLLEN;
 
 	@Override
-	public void computeNextAction(World world) {
+	public void computeNextAction(ArenaState arena) {
 
-		if (getCurrentAction() == Action.IDLE) {
+		if (currentAction == Action.IDLE) {
 			// Whenever the last action has finished, we select our next action.
 
 			switch (state) {
@@ -37,7 +38,7 @@ public class TestBot extends BeeBot {
 				break;
 
 			case COLLECTING_POLLEN:
-				flyTo(bee.hive);
+				flyTo(bee.hiveState);
 				state = State.RETURNING_TO_HIVE;
 				break;
 
@@ -47,7 +48,7 @@ public class TestBot extends BeeBot {
 				break;
 
 			case DEPOSITING_POLLEN:
-				flyTo(world.flowers.get(RNG.nextInt(world.flowers.size())));
+				flyTo(arena.flowers.get(RNG.nextInt(arena.flowers.size())));
 				state = State.GOING_TO_FLOWER;
 				break;
 			}

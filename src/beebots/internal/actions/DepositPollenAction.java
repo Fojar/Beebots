@@ -1,9 +1,11 @@
-package beebots.internal;
+package beebots.internal.actions;
+
+import beebots.internal.arena.*;
 
 public class DepositPollenAction extends Action {
 
 	@Override
-	boolean prepareFor(Bee bee, World world) {
+	public boolean prepareFor(Bee bee, Arena arena) {
 
 		// Depositing is possible when the bee is on its hive.
 		return bee.hive.location.distance(bee.position) < Hive.RADIUS;
@@ -15,10 +17,10 @@ public class DepositPollenAction extends Action {
 	}
 
 	@Override
-	boolean executeFor(Bee bee, World world) {
-		bee.hive.pollen += bee.pollen;
-		bee.pollen = 0;
-		return true;
+	public boolean executeFor(Bee bee, Arena arena) {
+		bee.hive.addPollen(bee.getPollen());
+		bee.setPollen(0);
+		return (completed = true);
 	}
 
 }

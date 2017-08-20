@@ -1,5 +1,7 @@
-package beebots.internal;
+package beebots.internal.arena;
 
+import beebots.internal.arena.Arena;
+import beebots.internal.arena.ArenaObject;
 import javafx.geometry.Point2D;
 
 /**

@@ -1,4 +1,6 @@
-package beebots.internal;
+package beebots.internal.actions;
+
+import beebots.internal.arena.*;
 
 public abstract class Action {
 
@@ -9,14 +11,14 @@ public abstract class Action {
 	/**
 	 * @return true if the preparation succeeds and the action can be executed.
 	 */
-	boolean prepareFor(Bee bee, World world) {
+	public boolean prepareFor(Bee bee, Arena arena) {
 		return true;
 	}
 
 	/**
 	 * @return true if the action is finished.
 	 */
-	abstract boolean executeFor(Bee bee, World world);
+	public abstract boolean executeFor(Bee bee, Arena world);
 
 	public abstract String getDescription();
 
@@ -24,7 +26,7 @@ public abstract class Action {
 		return completed;
 	}
 
-	void finish() {
+	public void finish() {
 		completed = true;
 	}
 

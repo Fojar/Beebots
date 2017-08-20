@@ -1,4 +1,4 @@
-package beebots.internal;
+package beebots.internal.arena;
 
 import javafx.geometry.Point2D;
 
@@ -9,8 +9,7 @@ public class Bee extends ArenaObject {
 
 	public final Hive hive;
 
-	Point2D position;
-	double pollen;
+	public Point2D position;
 
 	public Bee(int ID, Hive hive) {
 		super(verifyIDforPlayers(ID));
@@ -26,17 +25,13 @@ public class Bee extends ArenaObject {
 		return position;
 	}
 
-	public double getPollenCarried() {
-		return pollen;
+	@Override
+	public double getRadius() {
+		return RADIUS;
 	}
 
 	public double getRemainingCapacity() {
 		return POLLEN_CAPACITY - pollen;
-	}
-
-	@Override
-	public double getRadius() {
-		return RADIUS;
 	}
 
 }

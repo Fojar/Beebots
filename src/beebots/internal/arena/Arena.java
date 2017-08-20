@@ -1,17 +1,29 @@
-package beebots.internal;
+package beebots.internal.arena;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.stream.*;
 import javafx.geometry.Point2D;
 
-public class World {
+public class Arena {
+
+	public static final int SIZE = 1000;
+	public static final int MAX_COORD = SIZE / 2;
+
+	public static boolean inRange(Point2D point) {
+
+		double x = point.getX();
+		double y = point.getY();
+
+		return (x >= -MAX_COORD && x <= MAX_COORD && y >= -MAX_COORD && y <= MAX_COORD);
+	}
 
 	public final List<Flower> flowers;
 	public final List<Bee> bees;
 	public final List<Hive> hives;
 
-	public World() {
+	public Arena() {
 
 		List<Point> startingPositions = new ArrayList<>();
 
@@ -38,13 +50,12 @@ public class World {
 		bees = Collections.unmodifiableList(tempBees);
 
 		flowers = createFlowers();
-
 	}
 
 	private List<Flower> createFlowers() {
 		Random RNG = new Random();
 
-		// Start with all the hive locations, so flowers aren't spawned near them.
+		// Pretend that there are flowers at the hive locations, so real flowers aren't spawned near them.
 		ArrayList<Point2D> flowerPositions = hives.stream()
 				.map(h -> h.location)
 				.collect(Collectors.toCollection(ArrayList<Point2D>::new));
@@ -67,7 +78,7 @@ public class World {
 		}
 
 		List<Flower> tempFlowers = flowerPositions.stream()
-				.skip(hives.size()) // The first positions were for the hives.
+				.skip(hives.size()) // Exclude the fake positions for the hives.
 				.map(pos -> new Flower(pos))
 				.collect(Collectors.toList());
 
@@ -75,15 +86,12 @@ public class World {
 			assert (tempFlowers.get(i).ID == i);
 		}
 
-		System.out.println(tempFlowers.size() + " flowers created.");
-
 		return Collections.unmodifiableList(tempFlowers);
 	}
 
-	Flower getFlowerNearestToPoint(Point2D point) {
-
+	public Flower getFlowerNearestToPoint(Point2D point) {
 		return flowers.stream()
-				.collect(Collectors.minBy(Comparator.comparing(f -> f.location.distance(point)))).get();
+				.collect(Collectors.minBy(Comparator.comparing(f -> f.getPosition().distance(point)))).get();
 	}
 
 }
